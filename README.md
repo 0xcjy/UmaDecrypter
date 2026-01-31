@@ -74,7 +74,7 @@ meta.json 元数据文件存在
 1. 安装了此游戏的日服 Windows 版
 2. 游戏没在运行
 3. 文件夹空间充足（因为要储存解密后的游戏文件）
-4. **注意: 你需要先使用 Python 版本，生成 `meta.json` 和 `config.json`，之后才可以使用 C++ 版本!!!**
+4. **注意: 你需要先使用 Python 版本，生成 `meta.json` 和 `config.json`，或者在 Releases 页面下载我提供的 `meta.json` 和 `config.json` 之后才可以使用 C++ 版本！！！**
 
 ### 使用方法
 
