@@ -13,8 +13,8 @@
 1. 安装了 Python 3
 2. 安装了此游戏的日服 Windows 版
 3. 游戏没在运行
-4. 安装了 apsw-sqlite3mc 库
-5. main.py 文件放置在空间充足的文件夹下（因为要储存解密后的游戏文件）
+4. 安装了 `apsw-sqlite3mc` 库
+5. `UmaDecryptor.py` 文件放置在空间充足的文件夹下（因为要储存解密后的游戏文件）
 
 ### 使用方法
 
@@ -35,7 +35,7 @@ import numpy as np
 
 2. 运行程序
 ```bash
-python main.py
+python UmaDecryptor.py
 ```
 
 ### 可能的输出
