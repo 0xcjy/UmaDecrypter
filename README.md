@@ -1,4 +1,4 @@
-# UmaDecrypter
+# UmaDecryptor
 
 ## 介绍
 
