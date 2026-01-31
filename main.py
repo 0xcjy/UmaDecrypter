@@ -5,6 +5,7 @@ import apsw
 import apsw.bestpractice
 import json
 import os
+import time
 
 DB_KEY = "9c2bab97bcf8c0c4f1a9ea7881a213f6c9ebf9d8d4c6a8e43ce5a259bde7e9fd"
 AB_KEY = "532B4631E4A7B9473E7CFB"
@@ -65,11 +66,18 @@ def decrypt_ab(ab_path, key): # 解密单个 AssetBundle 文件
         decrypted_data.append(data[i] ^ key[i % len(key)])
     return bytes(decrypted_data)
 
-def decrypt(limit): # 解密 limit 个文件
+def decrypt(limit, output_interval, start_index): # 解密 limit 个文件
+
     meta = json.load(open(JSON_FILE))
-    print("元数据共", len(meta), "条, 加载成功")
+    total_files = len(meta)
+    print("元数据共", total_files, "条, 加载成功")
+    if not limit:
+        limit = total_files
+    start_time = time.time() # 记录开始时间
     cnt = 0
-    for i in meta:
+
+    for i in meta[start_index:]:
+        
         if i["path"].startswith("//"):
             i["path"] = os.path.join("0", i["path"][2:])
         ab_path = os.path.join(DATA_PATH, "dat", i["url"][:2], i["url"])
@@ -80,8 +88,20 @@ def decrypt(limit): # 解密 limit 个文件
             os.makedirs(output_dir)
         with open(output_path, "wb") as f:
             f.write(decrypted_data)
+
         cnt += 1
-        print("(" + str(cnt) + ") 源文件:\"" + ab_path + "\" 解密成功, 已保存为\"" + output_path + "\"")
+        if cnt % output_interval == 0 or cnt == limit:
+            elapsed_time = time.time() - start_time
+            if cnt > 0: # 避免除以零
+                avg_time_per_file = elapsed_time / cnt # 每文件平均耗时
+                remaining_files = limit - cnt # 预计剩余文件数
+                remaining_time = avg_time_per_file * remaining_files # 预计剩余时间
+            else:
+                avg_time_per_file = 0
+                remaining_time = 0
+
+            print(f"({cnt}/{limit}) 源文件:\"{ab_path}\" 解密成功, 已保存为\"{output_path}\"")
+            print(f"已用时间: {elapsed_time:.2f} 秒, 预计剩余时间: {remaining_time:.2f} 秒")
         if cnt >= limit:
             break
 
@@ -113,7 +133,9 @@ if __name__ == "__main__":
         export_as_json(connect(os.path.join(DATA_PATH, "meta")))  
     else:
         print(JSON_FILE, "元数据文件存在")
-
-    limit = int(input("请输入你要解密的文件数量: "))
-    decrypt(limit)
+    
+    start_index = int(input("请输入你要解密的文件起始索引 (默认是 0 ): ") or "0")
+    limit = int(input("请输入你要解密的文件数量 (输入 0 代表解密所有文件): ") or "0")
+    output_interval = int(input("请输入你要解密的文件输出间隔 (默认是 1 ): ") or "1")
+    decrypt(limit, output_interval = output_interval, start_index = start_index)
     print("解密完成")
