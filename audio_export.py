@@ -1,3 +1,5 @@
+print('使用前确认: 下载 vgmstream-cli 并添加到环境变量或者放到此程序同目录下')
+
 import os
 import subprocess
 import json
