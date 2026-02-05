@@ -6,6 +6,10 @@
 
 可以把加密的 AssetBundle 资源破解，然后便可以在 Unity 引擎中加载。
 
+在我写好代码之后，我发现好像 [UmamusumeExplorer](https://github.com/MarshmallowAndroid/UmamusumeExplorer) 已经有这个功能了。
+
+不过我这个仓库还有 `export_audio.py`，可以一键导出指定角色的音频文件。
+
 ## Python 版
 ### 使用前确认  
 1. 安装了 Python 3
