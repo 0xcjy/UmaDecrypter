@@ -1,6 +1,3 @@
-print("使用前确认: \n1. 安装了 Umamusume DMM 版游戏\n2. 游戏没在运行\n3. 安装了 apsw 库\n4. 此 py 文件放置在空间充足的空目录下")
-input("确认无误后, 按任意键继续...")
-
 import apsw
 import apsw.bestpractice
 import json
@@ -16,15 +13,6 @@ CONFIG_FILE = "config.json"
 DATA_PATH = ""
 DEC_STRATEGY = ""
 LAST_INDEX = 0
-
-def info():
-    print("使用的 APSW 文件", apsw.__file__)
-    print("APSW 版本", apsw.apsw_version())
-    print("SQLite 头文件版本", apsw.SQLITE_VERSION_NUMBER)
-    print("SQLite 库版本", apsw.sqlite_lib_version())
-    print("是否使用合并包", apsw.using_amalgamation)
-    print("数据库密钥", DB_KEY)
-    print("AssetBundle 密钥", AB_KEY)
 
 def connect(db_path="meta"): # 连接数据库
     connection = apsw.Connection(db_path, flags=apsw.SQLITE_OPEN_READONLY)
@@ -64,7 +52,10 @@ def decrypt_core(data: bytes, key: bytes) -> bytes: # 解密核心函数
     key_len = len(key_np)
     decrypted_np = np.empty_like(data_np)
     for i in range(len(data_np)):
-        decrypted_np[i] = data_np[i] ^ key_np[i % key_len]
+        if i >= 256:
+            decrypted_np[i] = data_np[i] ^ key_np[i % key_len]
+        else:
+            decrypted_np[i] = data_np[i]
     return decrypted_np.tobytes()
 
 def decrypt_ab(ab_path, key): # 解密单个 AssetBundle 文件
@@ -183,6 +174,6 @@ if __name__ == "__main__":
     
     start_index = int(input(f"请输入你要解密的文件起始索引 (默认是 {LAST_INDEX}): ") or str(LAST_INDEX))
     limit = int(input("请输入你要解密的文件数量 (输入 0 代表解密所有文件): ") or "0")
-    output_interval = int(input("请输入调试信息输出间隔 (默认是 1000): ") or "1000")
+    output_interval = int(input("请输入调试信息输出间隔 (默认是 200): ") or "200")
     decrypt(limit, output_interval = output_interval, start_index = start_index, config = config)
     print("解密完成")
