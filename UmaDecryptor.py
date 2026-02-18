@@ -65,7 +65,7 @@ def decrypt_ab(ab_path, key): # 解密单个 AssetBundle 文件
         return data
     if len(data) <= 256:
         return data
-    key_bytes = bytes.fromhex(key)
+    key_bytes = key.to_bytes(length=8, byteorder='little', signed=True)
     return decrypt_core(data, key_bytes) 
 
 def decrypt(limit, output_interval, start_index, config): # 解密 limit 个文件
@@ -127,7 +127,6 @@ def decrypt(limit, output_interval, start_index, config): # 解密 limit 个文�
             break
 
 if __name__ == "__main__":
-    info()
     apsw.bestpractice.apply(apsw.bestpractice.recommended)
 
     if not os.path.isfile(CONFIG_FILE):
